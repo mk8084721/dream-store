@@ -1,4 +1,4 @@
-package com.trachcode.dreamstore.service.product;
+package com.trachcode.dreamstore.request;
 
 import com.trachcode.dreamstore.model.Category;
 import lombok.Data;
