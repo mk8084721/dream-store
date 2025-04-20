@@ -1,16 +1,43 @@
 package com.trachcode.dreamstore.service.product;
 
 import com.trachcode.dreamstore.exeption.ProductNotFoundException;
+import com.trachcode.dreamstore.model.Category;
 import com.trachcode.dreamstore.model.Product;
+import com.trachcode.dreamstore.repository.CategoryRepository;
 import com.trachcode.dreamstore.repository.ProductRepository;
+import com.trachcode.dreamstore.request.AddProductRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
 public class ProductService implements IProductService{
-    private ProductRepository productRepository;
+
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
     @Override
-    public Product addProduct(Product product) {
-        return null;
+    public Product addProduct(AddProductRequest request) {
+        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+                .orElseGet(()->{
+                    Category newCategory = new Category(request.getCategory().getName());
+                    return categoryRepository.save(newCategory);
+                });
+        request.setCategory(category);
+        return productRepository.save(createProduct(request, category));
+    }
+
+    private Product createProduct(AddProductRequest request, Category category){
+        return new Product(
+                request.getName(),
+                request.getBrand(),
+                request.getPrice(),
+                request.getInventory(),
+                request.getDescription(),
+                category
+        );
     }
 
     @Override

@@ -1,11 +1,12 @@
 package com.trachcode.dreamstore.service.product;
 
 import com.trachcode.dreamstore.model.Product;
+import com.trachcode.dreamstore.request.AddProductRequest;
 
 import java.util.List;
 
 public interface IProductService {
-    Product addProduct(Product product);
+    Product addProduct(AddProductRequest request);
     Product getProductById(Long id);
     void deleteProductById(Long id);
     void updateProductById(Product product , Long id);
