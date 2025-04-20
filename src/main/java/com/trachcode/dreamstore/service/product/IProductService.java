@@ -2,6 +2,7 @@ package com.trachcode.dreamstore.service.product;
 
 import com.trachcode.dreamstore.model.Product;
 import com.trachcode.dreamstore.request.AddProductRequest;
+import com.trachcode.dreamstore.request.ProductUpdateRequest;
 
 import java.util.List;
 

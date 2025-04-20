@@ -1,13 +1,14 @@
 package com.trachcode.dreamstore.service.category;
 
-import com.trachcode.dreamstore.exeption.ProductNotFoundException;
+import com.trachcode.dreamstore.exeption.CategoryNotFoundException;
 import com.trachcode.dreamstore.model.Category;
 import com.trachcode.dreamstore.repository.CategoryRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService{
@@ -19,7 +20,12 @@ public class CategoryService implements ICategoryService{
 
     @Override
     public Category updateCategory(Category category, Long id) {
-        return null;
+        return Optional.ofNullable(getCategoryById(id))
+                .map(oldCategory->{
+                    oldCategory.setName(category.getName());
+                    return categoryRepository.save(oldCategory);
+                })
+                .orElseThrow(()-> new CategoryNotFoundException("Category not found!"));
     }
 
     @Override

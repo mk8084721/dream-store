@@ -6,6 +6,7 @@ import com.trachcode.dreamstore.model.Product;
 import com.trachcode.dreamstore.repository.CategoryRepository;
 import com.trachcode.dreamstore.repository.ProductRepository;
 import com.trachcode.dreamstore.request.AddProductRequest;
+import com.trachcode.dreamstore.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
