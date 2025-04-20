@@ -56,8 +56,22 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public void updateProductById(Product product, Long id) {
+    public Product updateProductById(ProductUpdateRequest request, Long id) {
+        return productRepository.findById(id)
+                .map(existingProduct -> updateExistingProduct(existingProduct , request))
+                .map(productRepository::save)
+                .orElseThrow(()-> new ProductNotFoundException("Product Not Found!"));
+    }
 
+    private Product updateExistingProduct(Product existingProduct , ProductUpdateRequest request){
+        existingProduct.setName(request.getName());
+        existingProduct.setBrand(request.getBrand());
+        existingProduct.setDescription(request.getDescription());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setInventory(request.getInventory());
+        Category category = categoryRepository.findByName(request.getCategory().getName());
+        existingProduct.setCategory(category);
+        return existingProduct;
     }
 
     @Override
