@@ -1,11 +1,13 @@
 package com.trachcode.dreamstore.service.category;
 
-import com.trachcode.dreamstore.exeption.CategoryNotFoundException;
+import com.trachcode.dreamstore.exeption.AlreadyExistsException;
+import com.trachcode.dreamstore.exeption.ResourceNotFoundException;
 import com.trachcode.dreamstore.model.Category;
 import com.trachcode.dreamstore.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.FileSystemAlreadyExistsException;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +17,9 @@ public class CategoryService implements ICategoryService{
     private final CategoryRepository categoryRepository;
     @Override
     public Category addCategory(Category category) {
-        return null;
+        return Optional.of(category).filter(c -> !categoryRepository.existsByName(category.getName()))
+                .map(categoryRepository::save)
+                .orElseThrow(()-> new AlreadyExistsException(STR."\{category.getName()} already exist!"));
     }
 
     @Override
@@ -25,7 +29,7 @@ public class CategoryService implements ICategoryService{
                     oldCategory.setName(category.getName());
                     return categoryRepository.save(oldCategory);
                 })
-                .orElseThrow(()-> new CategoryNotFoundException("Category not found!"));
+                .orElseThrow(()-> new ResourceNotFoundException("Category not found!"));
     }
 
     @Override
@@ -33,7 +37,7 @@ public class CategoryService implements ICategoryService{
         categoryRepository.findById(categoryId)
                 .ifPresentOrElse(categoryRepository::delete,
                         () -> {
-                    throw new CategoryNotFoundException("Category not found!");
+                    throw new ResourceNotFoundException("Category not found!");
                 });
     }
 
@@ -45,7 +49,7 @@ public class CategoryService implements ICategoryService{
     @Override
     public Category getCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(()-> new CategoryNotFoundException("Category not found!"));
+                .orElseThrow(()-> new ResourceNotFoundException("Category not found!"));
     }
 
     @Override
