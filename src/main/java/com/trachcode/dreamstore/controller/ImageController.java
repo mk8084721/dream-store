@@ -51,7 +51,7 @@ public class ImageController {
         try {
             imageService.updateImage(file, imageId);
             return ResponseEntity.ok(new ApiResponse("Updated Successfully!",null));
-        } catch (ResourceNotFoundException e) {
+        }catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage() ,null));
         }catch (Exception e) {
@@ -64,7 +64,7 @@ public class ImageController {
         try {
             imageService.deleteImageById(imageId);
             return ResponseEntity.ok(new ApiResponse("Deleted Successfully!",null));
-        } catch (ResourceNotFoundException e) {
+        }catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage() ,null));
         }catch (Exception e){
