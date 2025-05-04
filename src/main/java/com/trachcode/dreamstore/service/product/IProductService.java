@@ -1,5 +1,6 @@
 package com.trachcode.dreamstore.service.product;
 
+import com.trachcode.dreamstore.dto.ProductDto;
 import com.trachcode.dreamstore.model.Product;
 import com.trachcode.dreamstore.request.AddProductRequest;
 import com.trachcode.dreamstore.request.ProductUpdateRequest;
@@ -19,4 +20,7 @@ public interface IProductService {
     List<Product> getProductsByCategoryAndBrand(String category, String brand);
     Long countProductsByBrandAndName(String brand, String name);
 
+    List<ProductDto> getConvertedProducts(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }

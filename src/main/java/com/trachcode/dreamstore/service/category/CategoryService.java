@@ -19,7 +19,7 @@ public class CategoryService implements ICategoryService{
     public Category addCategory(Category category) {
         return Optional.of(category).filter(c -> !categoryRepository.existsByName(category.getName()))
                 .map(categoryRepository::save)
-                .orElseThrow(()-> new AlreadyExistsException(STR."\{category.getName()} already exist!"));
+                .orElseThrow(()-> new AlreadyExistsException(category.getName()+"already exist!"));
     }
 
     @Override

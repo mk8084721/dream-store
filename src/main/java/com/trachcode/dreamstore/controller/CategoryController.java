@@ -6,6 +6,7 @@ import com.trachcode.dreamstore.model.Category;
 import com.trachcode.dreamstore.response.ApiResponse;
 import com.trachcode.dreamstore.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,9 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("${api.prefix}/categories")
 public class CategoryController {
-    private final CategoryService categoryService;
 
+    private final CategoryService categoryService;
+    
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllCategories(){
         try {

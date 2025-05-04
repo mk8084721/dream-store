@@ -1,5 +1,6 @@
 package com.trachcode.dreamstore.controller;
 
+import com.trachcode.dreamstore.dto.ProductDto;
 import com.trachcode.dreamstore.exeption.ProductNotFoundException;
 import com.trachcode.dreamstore.exeption.ResourceNotFoundException;
 import com.trachcode.dreamstore.model.Product;
@@ -23,11 +24,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("/product/{productId}")
+    @GetMapping("/product/id/{productId}")
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId){
         try {
             Product product = productService.getProductById(productId);
-            return ResponseEntity.ok(new ApiResponse("Success!", product));
+            ProductDto productDto = productService.convertToDto(product);
+            return ResponseEntity.ok(new ApiResponse("Success!", productDto));
         } catch (ProductNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(e.getMessage(), null));
@@ -38,20 +40,22 @@ public class ProductController {
     public ResponseEntity<ApiResponse> getAllProducts(){
         try {
             List<Product> products = productService.getAllProduct();
+            List<ProductDto> productDtos = productService.getConvertedProducts(products);
             if(products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not Found!", null));
             }
-            return ResponseEntity.ok(new ApiResponse("Success!", products));
+            return ResponseEntity.ok(new ApiResponse("Success!", productDtos));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                     .body(new ApiResponse("Error!", INTERNAL_SERVER_ERROR));
         }
     }
 
-    @GetMapping("/product/{productName}")
+    @GetMapping("/product/name/{productName}")
     public ResponseEntity<ApiResponse> getProductByName(@PathVariable String productName){
         try {
             List<Product> products = productService.getProductByName(productName);
+            
             if(products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not Found!", null));
             }
@@ -76,8 +80,8 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/brand/{brandName}")
-    public ResponseEntity<ApiResponse> getProductsByBrand(@PathVariable String brandName){
+    @GetMapping("/product/brand")
+    public ResponseEntity<ApiResponse> getProductsByBrand(@RequestParam String brandName){
         try {
             List<Product> products = productService.getProductsByBrand(brandName);
             if(products.isEmpty()) {
